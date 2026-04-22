@@ -196,6 +196,33 @@ function Nav({ mode, setMode }) {
   );
 }
 
+/* ---------- Avatar ring (SVG — varying dash sizes) ---------- */
+function AvatarRing() {
+  const dash = "20 8 5 5 14 7 4 6 22 9 8 5 16 7 3 8 18 6";
+  return (
+    <svg className="avatar-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="av-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="0.6" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <radialGradient id="bg-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="55%" stopColor="rgba(34,221,170,0)" />
+          <stop offset="82%" stopColor="rgba(34,221,170,0.15)" />
+          <stop offset="100%" stopColor="rgba(34,221,170,0.04)" />
+        </radialGradient>
+      </defs>
+      <circle cx="50" cy="50" r="49" fill="url(#bg-glow)" />
+      <circle cx="50" cy="50" r="48" fill="none"
+        stroke="var(--accent)" strokeWidth="1.2"
+        strokeDasharray={dash} filter="url(#av-glow)">
+        <animateTransform attributeName="transform" type="rotate"
+          from="0 50 50" to="360 50 50" dur="14s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+}
+
 /* ---------- Professional sections ---------- */
 function ProHero() {
   return (
@@ -219,8 +246,7 @@ function ProHero() {
         </div>
       </div>
       <div className="avatar-wrap reveal">
-        <div className="avatar-ring" />
-        <div className="avatar-ring inner" />
+        <AvatarRing />
         <div className="avatar">
           <div className="avatar-placeholder">PORTRAIT</div>
         </div>
