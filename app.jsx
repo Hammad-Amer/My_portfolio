@@ -1,5 +1,9 @@
 // Portfolio — dark terminal aesthetic, Professional/Personal modes
-const { useState, useEffect, useRef } = React;
+import { useState, useEffect, useRef } from "react";
+import { ProjectCard } from "./ProjectCard.jsx";
+import { Globe } from "./Globe.jsx";
+import { NodeGraph } from "./NodeGraph.jsx";
+import { SongPlayer } from "./SongPlayer.jsx";
 
 /* ---------- Typewriter ---------- */
 function Typewriter({ text, speed = 55, startDelay = 300, className = "" }) {
@@ -70,76 +74,161 @@ function ScrollProgress() {
 function BgOrb() {
   const ref = useRef(null);
   useEffect(() => {
-    const on = (e) => {
-      if (!ref.current) return;
-      ref.current.style.transform = `translate(${e.clientX - 300}px, ${e.clientY - 300}px)`;
+    let raf = 0, x = 0, y = 0;
+    const apply = () => {
+      raf = 0;
+      if (ref.current) ref.current.style.transform = `translate(${x - 300}px, ${y - 300}px)`;
     };
-    window.addEventListener("pointermove", on);
-    return () => window.removeEventListener("pointermove", on);
+    // Coalesce many pointermove events into one transform write per frame.
+    const on = (e) => { x = e.clientX; y = e.clientY; if (!raf) raf = requestAnimationFrame(apply); };
+    window.addEventListener("pointermove", on, { passive: true });
+    return () => { window.removeEventListener("pointermove", on); if (raf) cancelAnimationFrame(raf); };
   }, []);
   return <div ref={ref} className="bg-orb" />;
 }
 
 /* ---------- Placeholder content ---------- */
 const DATA = {
-  name: { first: "Your", last: "Name" },
-  role: "Software Engineer",
-  lede: "IT Specialist & Full-Stack Developer | Pragmatic, delivery-oriented | Fintech & Cloud | Your Region",
-  email: "hello@example.com",
+  name: { first: "Hammad", last: "Amer" },
+  role: "AI & Full-Stack Engineer",
+  location: "Pakistan",
+  lede: "Software Engineer at the intersection of AI and Full-Stack Development.",
+  email: "hammadamer386@gmail.com",
   stats: [
-    { num: "22", label: "Age" },
-    { num: "2", label: "Years of experience" },
-    { num: "19", label: "Projects worked on" },
-    { num: "9", label: "Projects Deployed" },
+    { num: "23", label: "Age" },
+    { num: "1", label: "Years of experience" },
+    { num: "20", label: "Projects worked on" },
+    { num: "2", label: "Dean's List honors" },
   ],
   education: [
-    { title: "High school certificate", date: "Sep 1, 2019 - Jun 15, 2022", grade: "98.5", school: "Placeholder High School — Honorary student" },
-    { title: "Bachelor in Information Technology", date: "Sep 1, 2022 - Jun 15, 2026", grade: "3.7", school: "Placeholder National University" },
+    {
+      title: "Bachelor of Science in Computer Science",
+      date: "Aug 2022 - Jun 2026",
+      grade: "",
+      school: "FAST NUCES — Islamabad. Coursework: Data Structures & Algorithms, Generative AI, MLOps, Cloud Computing, Web Programming, Information Security.",
+    },
   ],
   projects: [
-    { title: "Mining Exchange Platform", desc: "Commodity trading platform with real-time auction and settlement.", mock: "mock-1", label: "DASHBOARD" },
-    { title: "Crypto Markets Tracker", desc: "Market dashboard with live charts and portfolio management.", mock: "mock-2", label: "CHARTS" },
-    { title: "Brokerage Mini App", desc: "Stock trading with account and balance management.", mock: "mock-3", label: "MOBILE" },
-    { title: "Hotel & Resorts SaaS", desc: "SaaS platform for resort management, integrating payments.", mock: "mock-4", label: "LANDING" },
+    {
+      title: "SpineScan",
+      desc: "AI diagnostic tool that classifies 25 lumbar-spine degenerative conditions from MRI scans, with Grad-CAM explainability and a MERN dashboard.",
+      mock: "mock-1", label: "AI · MEDICAL",
+      url: "https://github.com/Hammad-Amer/SpineScan",
+      image: "/images/projects/spinescan.png",
+      tech: ["PyTorch", "Python", "React", "YOLOX"],
+      github: "https://github.com/Hammad-Amer/SpineScan",
+    },
+    {
+      title: "Multimodal RAG",
+      desc: "Retrieval-augmented pipeline that answers text and image queries from PDFs using Sentence-BERT, CLIP and FAISS, with an LLM-powered chat interface.",
+      mock: "mock-2", label: "RAG · LLM",
+      url: "https://github.com/Hammad-Amer/MultiModalRag",
+      image: "/images/projects/multimodalrag.png",
+      tech: ["Python", "LLaMA2", "CLIP", "FAISS"],
+      github: "https://github.com/Hammad-Amer/MultiModalRag",
+    },
+    {
+      title: "TORCS AI Driver",
+      desc: "Machine-learning agent that learns to autonomously drive and race a car inside the TORCS simulator.",
+      mock: "mock-3", label: "SELF-DRIVING AI",
+      url: "https://github.com/Hammad-Amer/TORCS-Simulator",
+      image: "/images/projects/torcs.jpg",
+      tech: ["Python", "Machine Learning"],
+      github: "https://github.com/Hammad-Amer/TORCS-Simulator",
+    },
+    {
+      title: "AWS Microservices Deployment",
+      desc: "End-to-end DevOps pipeline deploying a two-service app to a Kubernetes cluster on AWS EC2 — provisioned with Terraform, configured via Ansible, delivered with ArgoCD.",
+      mock: "mock-4", label: "DEVOPS · CLOUD",
+      url: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
+      image: "/images/projects/aws_microservices.png",
+      tech: ["AWS", "Kubernetes", "Docker", "Terraform"],
+      github: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
+    },
+    {
+      title: "ConnectMe",
+      desc: "Instagram-inspired Android social app with real-time chat, stories and voice/video calls — evolved from a Firebase backend to a custom REST + MySQL stack.",
+      mock: "mock-5", label: "ANDROID · SOCIAL",
+      url: "https://github.com/Hammad-Amer/ConnectMe",
+      image: "/images/projects/connect_me.jpg",
+      tech: ["Kotlin", "Firebase", "MySQL"],
+      github: "https://github.com/Hammad-Amer/ConnectMe",
+    },
+    {
+      title: "SecureChat",
+      desc: "End-to-end encrypted client/server messaging built from raw cryptographic primitives (no TLS) — Diffie-Hellman key exchange, certificates and replay protection.",
+      mock: "mock-6", label: "SECURITY",
+      url: "https://github.com/Hammad-Amer/securechat-skeleton",
+      image: "/images/projects/securechat.png",
+      tech: ["Python", "Cryptography", "MySQL"],
+      github: "https://github.com/Hammad-Amer/securechat-skeleton",
+    },
+    {
+      title: "Marketplace",
+      desc: "Android buy-and-sell marketplace with real-time chat, image uploads, push notifications and offline SQLite caching over a MySQL API.",
+      mock: "mock-1", label: "ANDROID",
+      url: "https://github.com/Hammad-Amer/Marketplace",
+      image: "",
+      tech: ["Kotlin", "MySQL", "SQLite"],
+      github: "https://github.com/Hammad-Amer/Marketplace",
+    },
+    {
+      title: "Pacman in SFML",
+      desc: "Classic Pacman built in C++ with SFML graphics and POSIX threads powering concurrent ghost AI, collision detection and smooth animation.",
+      mock: "mock-2", label: "GAME · C++",
+      url: "https://github.com/Hammad-Amer/Pacman-in-SFML",
+      image: "",
+      tech: ["C++", "SFML", "pthreads"],
+      github: "https://github.com/Hammad-Amer/Pacman-in-SFML",
+    },
+    {
+      title: "FortPiler",
+      desc: "A custom compiler for a self-designed programming language — its own keywords, operators and built-in functions, with lexer, parser and code generation.",
+      mock: "mock-3", label: "COMPILER",
+      url: "https://github.com/Hammad-Amer/FortPiler",
+      image: "",
+      tech: ["C++", "Compiler Design"],
+      github: "https://github.com/Hammad-Amer/FortPiler",
+    },
   ],
   experience: [
-    { title: "Frontend Engineer", desc: "Shipped three projects as a team lead, and built a real-time auction interface. Continuously improving UX, exploring Framer Motion for animations.", v: "" },
-    { title: "Backend Engineer", desc: "Designed and built ISO-secure monolith and microservices where over 100 million USD worth of trades have been executed.", v: "v2" },
-    { title: "Teammate", desc: "Worked with stakeholders to develop Mining Commodity Exchange System. Led dev team, and deployed projects successfully.", v: "v3" },
-    { title: "Aspiring DevOps", desc: "Maintained multiple systems, currently preparing for Solutions Architect certification.", v: "v4" },
+    { title: "AI/ML Developer Intern", meta: "Code Generation · Jun – Sep 2025", desc: "Built an automated Financial Data Parser using multi-agent architectures and genetic algorithms, and owned end-to-end integration of the ML models into the startup's production applications.", v: "" },
+    { title: "Freelance Technical Consultant", meta: "Fiverr · May 2023 – Feb 2024", desc: "Provided technical consulting — improving website performance and search visibility through infrastructure audits, technical SEO and performance tuning.", v: "v2" },
   ],
   timeline: [
-    { year: "2025", copy: "It's been quite an exciting year. While finishing my thesis, I built core dealer-broker systems and organized online annual general meetings for 10 companies. Honored to be named Student of the Year and to win a cloud scholarship among 200+ students. Separately, completed a one-month internship abroad.", label: "THESIS & INTERNSHIP" },
-    { year: "2024", copy: "Focused on freelance consulting and performance tuning. Wrote a lot of TypeScript, shipped several side projects, and got comfortable with multi-agent systems.", label: "CONSULTING" },
-    { year: "2023", copy: "Joined my first team as a junior engineer. Worked on fintech systems handling real money — the best kind of pressure to grow under.", label: "FIRST ROLE" },
+    { year: "2025", copy: "Interned as an AI/ML Developer at Code Generation, building a multi-agent financial data parser, and kicked off my Final Year Project, SpineScan — an AI tool that reads spinal MRIs. Made the Dean's List along the way.", label: "", img: "/images/2025.png" },
+    { year: "2024", copy: "Took my first real steps into AI — teaching a car to drive itself in the TORCS simulator — while shipping ConnectMe, a full-blown social media app with real-time chat, stories and voice/video calls.", label: "Project", img: "/images/2024.jpg" },
+    { year: "2023", copy: "Started freelancing on Fiverr as a technical consultant — tuning website performance and search visibility — while deepening my full-stack and systems coursework.", label: "", img: "/images/2023.png" },
   ],
   hobbies: [
-    { title: "Morning Run", desc: "There's something special about running in the morning. Not an athlete, but it makes me feel truly peaceful. Also enjoy fitness and swimming." },
-    { title: "Enjoyer of good books", desc: "I enjoy many pastimes, from video games to movies and music, but reading novels is how I spend most of my time lately." },
-    { title: "Music Enthusiast", desc: "I also play guitar and piano, sharing my music online occasionally." },
-    { title: "Dream of Becoming a Polyglot", desc: "Currently learning a new language, and planning to study more in the future. No specific goal yet." },
+    { title: "Gym", desc: "Training and lifting is my daily reset — as much for a clear head as for the body. ", img: "/images/gym_hobbies.jpeg" },
+    { title: "Gaming", desc: "From story-driven single-player worlds to competitive matches, gaming is how I unwind and keep my curiosity fed.", img: "/images/gaming.jpeg" },
+    { title: "Painting", desc: "I love putting color to canvas. Painting is where the creative, artistic side of me gets to breathe.", img: "/images/painting.jpg" },
   ],
+  travel: {
+    title: "Cultural Exploration",
+    desc: "I want to experience as many cultures as I can — first making my way across all of Pakistan, then setting my sights on Europe next.",
+  },
   life: [
-    { kicker: "Books", title: "Fiction Novels", cls: "life-1" },
-    { kicker: "Music", title: "Musical Instruments, Band", cls: "life-2" },
-    { kicker: "Computer, IT", title: "Interest, Work", cls: "life-3" },
-    { kicker: "Fitness", title: "Sport, Wellness", cls: "life-4" },
+    { kicker: "Fitness", title: "Fitness", cls: "life-1", img: "/images/gym1.jpeg" },
+    { kicker: "Travel", title: "Exploring the World", cls: "life-2", img: "/images/travel.jpeg" },
+    { kicker: "Music", title: "Listening to Music", cls: "life-3", img: "/images/Music.jpeg" },
+    { kicker: "Computer, IT", title: "AI & Engineering", cls: "life-4", img: "/images/AI&engineering.jpeg" },
   ],
   routine: [
-    { t: "6:00 AM", what: "Wake up" },
-    { t: "8:00 AM", what: "School / Work" },
-    { t: "5:00 PM", what: "Gym" },
-    { t: "6:00 PM", what: "Read books" },
-    { t: "7:00 PM", what: "Piano & Music" },
-    { t: "9:00 PM", what: "Sleep" },
+    { t: "8:00 AM", what: "Wake up & gym" },
+    { t: "11:00 AM", what: "Lock in & deep work" },
+    { t: "8:00 PM", what: "Discord with friends" },
+    { t: "11:00 PM", what: "Wind down with music" },
+    { t: "12:00 AM", what: "Sleep" },
   ],
-  plan: ["Graduation", "Travel Abroad", "Master Piano", "Master Guitar", "Go Gym", "Read Books", "Learn Languages", "Learn Trading", "Make Family Happy", "Make Friends Happy"],
+  plan: ["Land an AI/ML role", "Travel the whole of Pakistan", "Explore Europe", "Get seriously fit", "Build my own product", "Learn an instrument", "Get back into painting"],
   tags: [
-    { cls: "tag-blue", label: "Books read", n: "+50" },
-    { cls: "tag-purple", label: "Animes watched", n: "+300" },
-    { cls: "tag-red", label: "Movies watched", n: "+200" },
-    { cls: "tag-green", label: "Musics learned", n: "+20" },
-    { cls: "tag-yellow", label: "Kanji learned", n: "+1100" },
+    { cls: "tag-blue", label: "Games played", n: "+700" },
+    { cls: "tag-purple", label: "Movies & series watched", n: "+500" },
+    { cls: "tag-red", label: "Books read", n: "+30" },
+    { cls: "tag-green", label: "Paintings made", n: "+150" },
+    { cls: "tag-yellow", label: "Cities explored", n: "+200" },
   ],
 };
 
@@ -160,9 +249,53 @@ const Icon = ({ name, size = 16 }) => {
     external: <><path d="M14 3h7v7" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round"/><path d="M21 3 10 14" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round"/></>,
     globe: <><circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" fill="none"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18M12 3a13 13 0 0 0 0 18" stroke="currentColor" strokeWidth="1.6" fill="none"/></>,
     alarm: <><circle cx="12" cy="13" r="8" stroke="currentColor" strokeWidth="1.6" fill="none"/><path d="M12 9v4l3 2M5 3 2 6m17-3 3 3" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinecap="round"/></>,
+    pin: <><path d="M12 21s7-6.3 7-11a7 7 0 1 0-14 0c0 4.7 7 11 7 11z" stroke="currentColor" strokeWidth="1.6" fill="none" strokeLinejoin="round"/><circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.6" fill="none"/></>,
   };
   return <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true">{paths[name]}</svg>;
 };
+
+/* ---------- Tech stack icons ---------- */
+const TECH_ICONS = {
+  nextjs: {
+    bg: "#000", color: "#fff", label: "Next.js",
+    svg: <><circle cx="12" cy="12" r="11" fill="currentColor" opacity="0.001"/><path d="M8 7.5v9M8 7.5l8.5 10.5M16 7.5v5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none"/></>,
+  },
+  express: {
+    bg: "#000", color: "#fff", label: "Express",
+    svg: <text x="12" y="15.5" textAnchor="middle" fill="currentColor" fontFamily="ui-monospace, monospace" fontSize="9" fontWeight="700" fontStyle="italic">ex</text>,
+  },
+  typescript: {
+    bg: "#3178C6", color: "#fff", label: "TypeScript",
+    svg: <text x="12" y="15.5" textAnchor="middle" fill="currentColor" fontFamily="system-ui, sans-serif" fontSize="9" fontWeight="800">TS</text>,
+  },
+  tailwind: {
+    bg: "#0B1120", color: "#38BDF8", label: "Tailwind",
+    svg: <path d="M6 10c1.2-2.5 2.8-3.5 4.8-3 1.3.4 2.2 1.4 3.2 2.5 1.2 1.2 2.4 1.5 3.6.8-.8 2-2 2.8-3.7 2.5-1.2-.2-2.2-1-3.2-2-1.2-1.4-2.6-1.8-4.7-.8zm-3 5c1.2-2.5 2.8-3.5 4.8-3 1.3.4 2.2 1.4 3.2 2.5 1.2 1.2 2.4 1.5 3.6.8-.8 2-2 2.8-3.7 2.5-1.2-.2-2.2-1-3.2-2-1.2-1.4-2.6-1.8-4.7-.8z" fill="currentColor"/>,
+  },
+  react: {
+    bg: "#000", color: "#61DAFB", label: "React",
+    svg: <><circle cx="12" cy="12" r="1.6" fill="currentColor"/><ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="currentColor" strokeWidth="1" fill="none"/><ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="currentColor" strokeWidth="1" fill="none" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.5" stroke="currentColor" strokeWidth="1" fill="none" transform="rotate(-60 12 12)"/></>,
+  },
+  node: {
+    bg: "#000", color: "#8CC84B", label: "Node.js",
+    svg: <><path d="M12 2.5 3.2 7.5v9L12 21.5l8.8-5v-9L12 2.5z" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinejoin="round"/><text x="12" y="15" textAnchor="middle" fill="currentColor" fontFamily="system-ui, sans-serif" fontSize="7" fontWeight="700">N</text></>,
+  },
+  mongodb: {
+    bg: "#000", color: "#4DB33D", label: "MongoDB",
+    svg: <path d="M12 2c-1 3.5-4.5 5.5-4.5 10s2.5 8.5 4.5 9.5c2-1 4.5-5 4.5-9.5S13 5.5 12 2zm0 4v15" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round"/>,
+  },
+};
+
+function TechIcon({ name, size = 32 }) {
+  const t = TECH_ICONS[name];
+  if (!t) return null;
+  const inner = Math.round(size * 0.6);
+  return (
+    <span className="tech-dot" style={{ background: t.bg, color: t.color }} title={t.label} aria-label={t.label}>
+      <svg viewBox="0 0 24 24" width={inner} height={inner} aria-hidden="true">{t.svg}</svg>
+    </span>
+  );
+}
 
 /* ---------- Reveal on scroll ---------- */
 function useReveal(deps = []) {
@@ -189,8 +322,7 @@ function Nav({ mode, setMode }) {
       <nav className="nav-links" aria-label="primary">
         <a className={"nav-link" + (mode === "pro" ? " active" : "")} href="#top" onClick={(e)=>{e.preventDefault(); setMode("pro");}}>Professional</a>
         <a className={"nav-link" + (mode === "personal" ? " active" : "")} href="#top" onClick={(e)=>{e.preventDefault(); setMode("personal");}}>Personal</a>
-        <a className="nav-link" href="#contact">Contact</a>
-        <a className="nav-lang" href="#"><Icon name="globe" size={14}/> English ▾</a>
+        <a className="nav-lang" href="/resume/Hammad-Amer-Resume.pdf" target="_blank" rel="noopener noreferrer"><Icon name="external" size={13}/> Resume</a>
       </nav>
     </header>
   );
@@ -215,11 +347,57 @@ function AvatarRing() {
       <circle cx="50" cy="50" r="49" fill="url(#bg-glow)" />
       <circle cx="50" cy="50" r="48" fill="none"
         stroke="var(--accent)" strokeWidth="1.2"
-        strokeDasharray={dash} filter="url(#av-glow)">
-        <animateTransform attributeName="transform" type="rotate"
-          from="0 50 50" to="360 50 50" dur="14s" repeatCount="indefinite" />
-      </circle>
+        strokeDasharray={dash} filter="url(#av-glow)" />
     </svg>
+  );
+}
+
+/* ---------- Interactive profile portrait ----------
+   Shows photo 1 by default. Behaviour adapts to the device:
+   - Hover-capable (laptop/desktop): hovering flips to photo 2, leaving reverts.
+   - Touch (no hover): a tap flips to photo 2, and it auto-reverts to photo 1
+     after 3s, or the user can tap again to flip back immediately. */
+function ProfileAvatar() {
+  const [flipped, setFlipped] = useState(false);
+  const [canHover, setCanHover] = useState(false);
+  const timer = useRef(null);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => { mq.removeEventListener?.("change", update); clearTimeout(timer.current); };
+  }, []);
+
+  // Tap toggles on touch devices only; hover drives it on desktop.
+  const toggle = () => {
+    if (canHover) return;
+    clearTimeout(timer.current);
+    setFlipped((f) => {
+      const next = !f;
+      if (next) timer.current = setTimeout(() => setFlipped(false), 3000);
+      return next;
+    });
+  };
+  const hoverProps = canHover
+    ? { onMouseEnter: () => setFlipped(true), onMouseLeave: () => setFlipped(false) }
+    : {};
+
+  return (
+    <button
+      type="button"
+      className="avatar-toggle"
+      onClick={toggle}
+      {...hoverProps}
+      aria-pressed={flipped}
+      aria-label={flipped ? "Show first profile photo" : "Show second profile photo"}
+    >
+      <img className="avatar-photo" src="/images/profileimg1.png" alt="Hammad Amer"
+        style={{ opacity: flipped ? 0 : 1 }} draggable="false" />
+      <img className="avatar-photo" src="/images/profileimg2.png" alt="" aria-hidden="true"
+        style={{ opacity: flipped ? 1 : 0 }} draggable="false" />
+    </button>
   );
 }
 
@@ -228,27 +406,27 @@ function ProHero() {
   return (
     <section id="top" className="hero shell">
       <div className="reveal">
-        <div className="hero-kicker">{DATA.role}</div>
+        <div className="hero-kicker">
+          {DATA.role}
+          <span className="hero-loc"><Icon name="pin" size={13}/> Based in {DATA.location}</span>
+        </div>
         <h1 className="hero-title">
           <span className="hi">Hello I'm</span>
           <span className="name"><Typewriter text={`${DATA.name.first} ${DATA.name.last}`} speed={70}/></span>
         </h1>
         <p className="hero-desc">{DATA.lede}</p>
         <div className="hero-actions">
-          <a className="btn-outline" href="#"><span>VIEW CV</span><span className="arrow">›</span></a>
+          <a className="btn-fill" href="#contact"><span>Let's talk</span><span className="arrow">›</span></a>
           <div className="socials">
-            <a className="social" href="#" aria-label="Facebook"><Icon name="facebook"/></a>
-            <a className="social" href="#" aria-label="Instagram"><Icon name="instagram"/></a>
-            <a className="social" href="#" aria-label="YouTube"><Icon name="youtube"/></a>
-            <a className="social" href="#" aria-label="LinkedIn"><Icon name="linkedin"/></a>
-            <a className="social" href="#" aria-label="GitHub"><Icon name="github"/></a>
+            <a className="social" href="https://www.linkedin.com/in/hammad-amer-ch" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Icon name="linkedin"/></a>
+            <a className="social" href="https://github.com/Hammad-Amer" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Icon name="github"/></a>
           </div>
         </div>
       </div>
       <div className="avatar-wrap reveal">
         <AvatarRing />
         <div className="avatar">
-          <div className="avatar-placeholder">PORTRAIT</div>
+          <ProfileAvatar />
         </div>
       </div>
     </section>
@@ -274,17 +452,51 @@ function Education() {
   return (
     <section className="section shell">
       <h2 className="section-title reveal"><span className="ico"><Icon name="cap" size={36}/></span> Education</h2>
-      <div className="edu-grid">
+      <div className={"edu-grid" + (DATA.education.length === 1 ? " solo" : "")}>
         {DATA.education.map((e) => (
           <article className="card reveal" key={e.title}>
             <h3 className="edu-title">{e.title}</h3>
             <div className="edu-date">{e.date}</div>
-            <div className="edu-grade"><Icon name="cap" size={16}/> {e.grade}</div>
+            {e.grade && <div className="edu-grade"><Icon name="cap" size={16}/> {e.grade}</div>}
             <p className="edu-school">{e.school}</p>
           </article>
         ))}
       </div>
     </section>
+  );
+}
+
+// Primary tech stack — grouped, with each tool's authentic logo (rendered as a
+// brand-colored mask) and brand color for the tile glow.
+const TECH_STACK = [
+  { group: "Core Dev", items: [
+    { name: "React", slug: "react", brand: "#61DAFB" },
+    { name: "Node.js", slug: "nodejs", brand: "#66BB6A" },
+    { name: "Python", slug: "python", brand: "#4B8BBE" },
+    { name: "C++", slug: "cpp", brand: "#6E9FD2" },
+    { name: "Java", slug: "java", brand: "#F89820" },
+    { name: "MongoDB", slug: "mongodb", brand: "#4DB33D" },
+  ]},
+  { group: "Cloud & Infra", items: [
+    { name: "AWS", slug: "aws", brand: "#FF9900" },
+    { name: "Docker", slug: "docker", brand: "#2496ED" },
+    { name: "Kubernetes", slug: "kubernetes", brand: "#5C86EA" },
+    { name: "Linux", slug: "linux", brand: "#FCC624" },
+  ]},
+  { group: "AI & MLOps", items: [
+    { name: "PyTorch", slug: "pytorch", brand: "#EE4C2C" },
+    { name: "TensorFlow", slug: "tensorflow", brand: "#FF8F00" },
+    { name: "MLflow", slug: "mlflow", brand: "#2BA8E8" },
+    { name: "Airflow", slug: "airflow", brand: "#3098ED" },
+  ]},
+];
+
+function TechTile({ name, slug, brand }) {
+  return (
+    <span className="tile" style={{ "--brand": brand, "--logo": `url(/images/tech/${slug}.svg)` }}>
+      <span className="tile-logo" aria-hidden="true" />
+      <span className="tile-name">{name}</span>
+    </span>
   );
 }
 
@@ -301,30 +513,32 @@ function ShortProfile() {
 
       <div className="bento reveal">
         <div className="bento-big">
-          <div className="bento-big-mock">DEVICE MOCKUP</div>
-          <div className="bento-big-text">Developer building clean, reliable cloud, auction, and trading systems</div>
+          <div className="bento-big-mock"><NodeGraph className="mock-graph" /></div>
+          <div className="bento-big-text">AI engineer building intelligent, end-to-end products — multi-agent ML pipelines and deep-learning models, deployed in production-grade apps.</div>
         </div>
-        <div className="bento-box">
-          <div className="bento-headline">Fluent in English, Japanese and Mongolian (IELTS 7, N3)</div>
+        <div className="bento-box bento-lang">
+          <div className="bento-headline">Fluent in English and Urdu</div>
+          <div className="urdu-watermark" aria-hidden="true" lang="ur" dir="rtl">خوش آمدید</div>
         </div>
-        <div className="bento-box bento-small">
-          <div>
-            <div className="bento-small-label">My primary<br/>tech stack</div>
-            <div className="bento-small-stack">NEXT, Express</div>
-          </div>
-          <div className="stack-chips">
-            <div className="chip">Express</div>
-            <div className="chip">.NET</div>
-            <div className="chip">Typescript</div>
-            <div className="chip">GO</div>
+        <div className="bento-box bento-stack">
+          <div className="bento-small-label">My primary tech stack</div>
+          <div className="stack-groups">
+            {TECH_STACK.map((g) => (
+              <div className="stack-group" key={g.group}>
+                <div className="stack-group-label">{g.group}</div>
+                <div className="stack-tiles">
+                  {g.items.map((it) => <TechTile key={it.name} {...it} />)}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="profile-row reveal">
         <div className="card">
-          <div className="bento-small-label" style={{marginBottom:10}}>Software Architect</div>
-          <p className="profile-arch">Designing systems and leading technical direction across cloud deployments.</p>
+          <div className="bento-small-label" style={{marginBottom:10}}>AI / ML Engineer</div>
+          <p className="profile-arch">Deploying PyTorch models within scalable MERN architectures — from training pipelines to production.</p>
         </div>
         <div className="profile-ask">
           <div className="profile-ask-title">Do you want to ask a question?</div>
@@ -340,13 +554,12 @@ function ShortProfile() {
           <div className="title">Graduating soon, exploring what's next</div>
         </div>
         <div className="scoop-code">
-          <div><span className="cm">// Importing a single module</span></div>
-          <div><span className="ln">1</span><span className="kw">import</span> moduleName <span className="kw">from</span> <span className="str">'modulePath'</span>;</div>
-          <div><span className="ln">2</span></div>
-          <div><span className="ln">3</span><span className="cm">// Importing multiple modules</span></div>
-          <div><span className="ln">4</span><span className="kw">import</span> {"{ module1, module2 }"} <span className="kw">from</span> <span className="str">'modulePath'</span>;</div>
-          <div><span className="ln">5</span></div>
-          <div><span className="ln">6</span><span className="cm">// Importing an entire module</span></div>
+          <div><span className="ln">1</span><span className="cm"># my debugging strategy</span></div>
+          <div><span className="ln">2</span><span className="kw">while</span> <span className="kw">not</span> working:</div>
+          <div><span className="ln">3</span>{"    "}print(<span className="str">"but... why?"</span>){"   "}<span className="cm"># 🐛</span></div>
+          <div><span className="ln">4</span>{"    "}change_one_thing()</div>
+          <div><span className="ln">5</span>{"    "}pray(){"        "}<span className="cm"># 🙏</span></div>
+          <div><span className="ln">6</span><span className="cm"># works now. nobody knows why.</span></div>
         </div>
       </div>
     </section>
@@ -354,37 +567,43 @@ function ShortProfile() {
 }
 
 function Projects() {
+  const pretty = {
+    nextjs: "Next.js", express: "Express", typescript: "TypeScript",
+    tailwind: "Tailwind", react: "React", node: "Node.js", mongodb: "MongoDB",
+  };
   return (
-    <section className="section shell">
+    <section className="section shell proj-section">
       <h2 className="projects-head reveal">A small selection of <span className="accent">recent projects</span></h2>
       <div className="proj-grid">
-        {DATA.projects.map((p, i) => (
-          <article className="proj-card reveal" key={p.title} style={{transitionDelay: `${i*50}ms`}}>
-            <div className={"proj-thumb " + p.mock} data-label={p.label} />
-            <div className="proj-body">
-              <h3 className="proj-title">{p.title}</h3>
-              <p className="proj-desc">{p.desc}</p>
-              <div className="proj-foot">
-                <div className="tech-dots">
-                  <span className="tech-dot">N</span>
-                  <span className="tech-dot">ex</span>
-                  <span className="tech-dot ts">TS</span>
-                  <span className="tech-dot tw">tw</span>
-                </div>
-                <a className="proj-link" href="#">Check Live Site <Icon name="external" size={13}/></a>
-              </div>
-            </div>
-          </article>
+        {DATA.projects.slice(0, 6).map((p, i) => (
+          <ProjectCard
+            key={p.title}
+            index={i}
+            title={p.title}
+            description={p.desc}
+            url={p.url.startsWith("http") ? p.url : `https://${p.url}`}
+            tags={(p.tech || []).map(t => pretty[t] || t)}
+            thumbnail={{ src: p.image, label: p.label }}
+            accent="#10F294"
+            tiltDeg={8}
+            cardBg="#0d0f15"
+            strokeColor="rgba(255,255,255,0.06)"
+            fontTitle='"JetBrains Mono", ui-monospace, monospace'
+            fontBody='"JetBrains Mono", ui-monospace, monospace'
+          />
         ))}
       </div>
       <div className="explore-more reveal">
-        <a className="explore-btn" href="#">Explore more projects</a>
+        <a className="explore-btn" href="#projects">Explore more projects <span className="explore-arrow">→</span></a>
       </div>
     </section>
   );
 }
 
 function ExperienceCards() {
+  // Static cards — the previous version drove a per-frame requestAnimationFrame
+  // loop to travel a glow around each card's perimeter, which was costing frames.
+  // The accent glow is now a fixed, GPU-cheap CSS gradient that brightens on hover.
   return (
     <section className="section shell">
       <h2 className="projects-head reveal">My <span className="accent">Experience</span></h2>
@@ -394,6 +613,7 @@ function ExperienceCards() {
             <div className={"xp-illust " + x.v}>ICON</div>
             <div className="xp-body">
               <h3 className="xp-title">{x.title}</h3>
+              {x.meta && <div className="xp-meta">{x.meta}</div>}
               <p className="xp-desc">{x.desc}</p>
             </div>
           </article>
@@ -408,7 +628,7 @@ function Journey() {
     <section id="journey" className="section shell">
       <div className="journey-intro reveal">
         <h3 className="title">My journey report</h3>
-        <p className="body">I've had the opportunity to develop software across a variety of settings — from small side-jobs to large corporations, mostly building financial systems. Here's my timeline of my journey.</p>
+        <p className="body">I've built software across internships, freelance work and academic projects — spanning AI/ML, full-stack web and mobile apps, and systems. Here's a short timeline of how it came together.</p>
       </div>
       <div className="timeline">
         {DATA.timeline.map((t) => (
@@ -416,7 +636,10 @@ function Journey() {
             <span className="tl-dot" />
             <div className="tl-year">{t.year}</div>
             <p className="tl-copy">{t.copy}</p>
-            <div className="tl-thumb">{t.label}</div>
+            <div className="tl-thumb">
+              {t.img && <img src={t.img} alt={`${t.year} — ${t.label || t.year}`} loading="lazy" />}
+              {t.label && <span className="tl-thumb-label">{t.label}</span>}
+            </div>
           </div>
         ))}
       </div>
@@ -425,11 +648,24 @@ function Journey() {
 }
 
 function Talk({ setMode }) {
+  const [copied, setCopied] = useState(false);
+  const copyEmail = () => {
+    navigator.clipboard?.writeText(DATA.email).catch(()=>{});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
   return (
     <section id="contact" className="talk shell">
       <h2 className="talk-title reveal">Let's <span className="accent">Talk</span></h2>
       <p className="talk-body reveal">What led you here? What are you looking for? I would love to hear from you over a virtual coffee chat!</p>
-      <a className="btn-purple reveal" href={`mailto:${DATA.email}`}>Let's get in touch <Icon name="send" size={14}/></a>
+      <a className="btn-purple reveal" href={`https://mail.google.com/mail/?view=cm&fs=1&to=${DATA.email}&su=${encodeURIComponent("Hello Hammad — let's talk")}`} target="_blank" rel="noopener noreferrer">Let's get in touch <Icon name="send" size={14}/></a>
+      <div className="talk-email reveal">
+        <span className="talk-email-label">Or reach me directly at</span>
+        <a className="talk-email-addr" href={`mailto:${DATA.email}`}>{DATA.email}</a>
+        <button className="talk-email-copy" onClick={copyEmail} aria-label="Copy email address">
+          <Icon name="copy" size={13}/> {copied ? "Copied!" : "Copy"}
+        </button>
+      </div>
       <div className="reveal">
         <button className="peer-btn" onClick={() => setMode("personal")}>Peer through my Personal Life</button>
       </div>
@@ -438,15 +674,54 @@ function Talk({ setMode }) {
 }
 
 /* ---------- Personal sections ---------- */
+// Words that cycle after "Hac is ___" — a mix of work traits and personality.
+const HAC_WORDS = ["Curious", "Creative", "Relentless", "Analytical", "Caffeinated", "Always learning"];
+
+// Looping typewriter: types a word, holds, backspaces it, then types the next.
+function RotatingWord({ words, className = "", typeSpeed = 110, deleteSpeed = 60, hold = 2200 }) {
+  const [wi, setWi] = useState(0);
+  const [text, setText] = useState(words[0] || "");
+  const [phase, setPhase] = useState("hold"); // typing | hold | deleting
+  useEffect(() => {
+    if (!words || words.length <= 1) return;
+    const word = words[wi];
+    let timer;
+    if (phase === "hold") {
+      timer = setTimeout(() => setPhase("deleting"), hold);
+    } else if (phase === "deleting") {
+      if (text.length === 0) {
+        setWi((p) => (p + 1) % words.length);
+        setPhase("typing");
+      } else {
+        timer = setTimeout(() => setText(text.slice(0, -1)), deleteSpeed);
+      }
+    } else { // typing
+      if (text.length === word.length) {
+        setPhase("hold");
+      } else {
+        timer = setTimeout(() => setText(word.slice(0, text.length + 1)), typeSpeed);
+      }
+    }
+    return () => clearTimeout(timer);
+  }, [text, phase, wi, words, typeSpeed, deleteSpeed, hold]);
+  // Caret only shows while typing/deleting — it disappears once a word is complete.
+  return (
+    <span className={className}>
+      {text}
+      {phase !== "hold" && <span className="type-caret" aria-hidden="true">&nbsp;</span>}
+    </span>
+  );
+}
+
 function PersonalHero({ setMode }) {
   return (
     <section className="p-hello shell" id="top">
       <div className="reveal">
         <div className="row-1">Hello again?</div>
-        <div className="row-2">My nickname is <span className="tag">Nick</span></div>
-        <div className="line-sm">Nick is <span className="accent">Curious</span></div>
-        <div className="line-md">Built this website with care 🎨 ✨ 🚀</div>
-        <a className="write-btn" href={`mailto:${DATA.email}`}>Write a Letter</a>
+        <div className="row-2">My nickname is <span className="tag">Hac</span></div>
+        <div className="line-sm">Hac is <RotatingWord className="accent" words={HAC_WORDS} /></div>
+        <div className="line-md">To me, code is a canvas — every pixel here was hand-crafted with care</div>
+        <a className="write-btn" href={`https://mail.google.com/mail/?view=cm&fs=1&to=${DATA.email}&su=${encodeURIComponent("A letter for Hac")}`} target="_blank" rel="noopener noreferrer">Write a Letter</a>
       </div>
     </section>
   );
@@ -455,16 +730,23 @@ function PersonalHero({ setMode }) {
 function Hobbies() {
   return (
     <section className="section shell">
-      <h2 className="projects-head reveal">Nick's <span className="accent">Hobbies</span></h2>
-      <p className="section-sub reveal">I like to stay active. New hobbies are added almost every year.</p>
+      <h2 className="projects-head reveal">Hac's <span className="accent">Hobbies</span></h2>
+      <p className="section-sub reveal">I pick up hobbies faster than I finish side projects.</p>
       <div className="hobbies-grid reveal">
         {DATA.hobbies.map((h) => (
           <div className="hobby" key={h.title}>
             <h3 className="hobby-title">{h.title}</h3>
             <p className="hobby-desc">{h.desc}</p>
-            <div className="hobby-img">IMAGERY</div>
+            <div className="hobby-img">
+              {h.img ? <img src={h.img} alt={h.title} loading="lazy" /> : "IMAGERY"}
+            </div>
           </div>
         ))}
+        <div className="hobby hobby-globe-card">
+          <h3 className="hobby-title">{DATA.travel.title}</h3>
+          <p className="hobby-desc">{DATA.travel.desc}</p>
+          <Globe className="hobby-globe" />
+        </div>
       </div>
     </section>
   );
@@ -473,11 +755,17 @@ function Hobbies() {
 function LifeStrip() {
   return (
     <section className="section shell">
-      <h2 className="projects-head reveal" style={{textAlign:"left"}}>Components of <span className="accent">Nick's Life</span></h2>
+      <h2 className="projects-head reveal" style={{textAlign:"left"}}>Components of <span className="accent">Hac's Life</span></h2>
       <div className="life-strip">
         {DATA.life.map((l, i) => (
-          <div className={"life-card reveal " + l.cls} key={l.title} style={{transitionDelay: `${i*50}ms`}}>
-            <div className="life-kicker">{l.kicker}</div>
+          <div
+            className={"life-card reveal " + l.cls}
+            key={l.title}
+            style={{
+              transitionDelay: `${i*50}ms`,
+              ...(l.img ? { backgroundImage: `url("${l.img}")`, backgroundSize: "cover", backgroundPosition: "center" } : {}),
+            }}
+          >
             <div className="life-title">{l.title}</div>
           </div>
         ))}
@@ -514,12 +802,7 @@ function PersonalBento() {
         </div>
 
         <div className="music-col">
-          <div className="music-card">
-            <div className="music-thumb">ALBUM ART</div>
-            <div className="music-title">Favorite Track</div>
-            <div className="music-sub">Film Soundtrack</div>
-            <div className="music-ctrls">|◂ ▸▸ ▸|</div>
-          </div>
+          <SongPlayer />
           <div className="tags-col">
             {DATA.tags.map((t) => (
               <div className={"tag-row " + t.cls} key={t.label}>
@@ -561,26 +844,120 @@ function Footer() {
     <footer className="footer">
       <div className="footer-name">{DATA.name.first} {DATA.name.last}</div>
       <div className="footer-socials">
-        <a className="social" href="#" aria-label="Facebook"><Icon name="facebook"/></a>
-        <a className="social" href="#" aria-label="Instagram"><Icon name="instagram"/></a>
-        <a className="social" href="#" aria-label="YouTube"><Icon name="youtube"/></a>
-        <a className="social" href="#" aria-label="LinkedIn"><Icon name="linkedin"/></a>
-        <a className="social" href="#" aria-label="GitHub"><Icon name="github"/></a>
+        <a className="social" href="https://www.linkedin.com/in/hammad-amer-ch" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><Icon name="linkedin"/></a>
+        <a className="social" href="https://github.com/Hammad-Amer" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><Icon name="github"/></a>
       </div>
     </footer>
+  );
+}
+
+/* ---------- All Projects (archive route) ---------- */
+function AllProjects() {
+  const pretty = {
+    nextjs: "Next.js", express: "Express", typescript: "TypeScript",
+    tailwind: "Tailwind", react: "React", node: "Node.js", mongodb: "MongoDB",
+  };
+  // Curated to the main technologies (cards still show every tag). Each project
+  // matches at least one of these, so no filter ever lands on an empty list.
+  const techs = ["Python", "PyTorch", "React", "Kotlin", "C++", "AWS", "MySQL"];
+  const [filter, setFilter] = useState("All");
+  const countFor = (t) => DATA.projects.filter((p) => (p.tech || []).includes(t)).length;
+  const list = filter === "All"
+    ? DATA.projects
+    : DATA.projects.filter((p) => (p.tech || []).includes(filter));
+
+  useReveal([filter]);
+
+  return (
+    <main className="archive page-transition">
+      <div className="shell">
+        <div className="arch-bar">
+          <a className="arch-back" href="#top"><span className="arch-back-arrow">←</span> Back to portfolio</a>
+          <span className="arch-path">~/projects — {DATA.projects.length} entries</span>
+        </div>
+
+        <header className="arch-head reveal">
+          <div className="arch-kicker">The Index</div>
+          <h1 className="arch-title">Project <span className="accent">Archive</span></h1>
+          <p className="arch-sub">Everything I've built and tinkered with — case studies, side quests and experiments. Filter by stack.</p>
+        </header>
+
+        <div className="arch-filters reveal">
+          <button className={"arch-chip" + (filter === "All" ? " on" : "")} onClick={() => setFilter("All")}>
+            All <span className="arch-chip-n">{DATA.projects.length}</span>
+          </button>
+          {techs.map((t) => (
+            <button key={t} className={"arch-chip" + (filter === t ? " on" : "")} onClick={() => setFilter(t)}>
+              {pretty[t] || t} <span className="arch-chip-n">{countFor(t)}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="archive-grid">
+          {list.map((p) => {
+            const n = DATA.projects.indexOf(p) + 1;
+            const href = p.url.startsWith("http") ? p.url : `https://${p.url}`;
+            return (
+              <a className="arch-card reveal" key={p.title} href={href} target="_blank" rel="noopener noreferrer">
+                <div className={"arch-thumb " + p.mock}>
+                  <span className="arch-idx">{String(n).padStart(2, "0")}</span>
+                  <span className="arch-label">{p.label}</span>
+                </div>
+                <div className="arch-card-body">
+                  <h3 className="arch-name">{p.title}</h3>
+                  <p className="arch-desc">{p.desc}</p>
+                  <div className="arch-foot">
+                    <div className="arch-tech">
+                      {(p.tech || []).map((t) => <span key={t} className="arch-tag">{pretty[t] || t}</span>)}
+                    </div>
+                    <span className="arch-view">View <span className="arch-view-arrow">↗</span></span>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+
+        <div className="arch-end reveal">
+          <a className="arch-back arch-back-bottom" href="#top"><span className="arch-back-arrow">←</span> Back to portfolio</a>
+        </div>
+      </div>
+    </main>
   );
 }
 
 /* ---------- App ---------- */
 function App() {
   const [mode, setMode] = useState(() => localStorage.getItem("portfolio-mode") || "pro");
+  const [route, setRoute] = useState(() => (window.location.hash === "#projects" ? "projects" : "home"));
+
+  useEffect(() => {
+    const onHash = () => {
+      setRoute(window.location.hash === "#projects" ? "projects" : "home");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("portfolio-mode", mode);
     document.body.classList.toggle("mode-personal", mode === "personal");
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [mode]);
 
-  useReveal([mode]);
+  useReveal([mode, route]);
+
+  if (route === "projects") {
+    return (
+      <>
+        <ScrollProgress />
+        <BgOrb />
+        <AllProjects />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -615,4 +992,4 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+export default App;
