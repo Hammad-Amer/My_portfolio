@@ -593,6 +593,7 @@ function Projects() {
           />
         ))}
       </div>
+      <p className="swipe-hint" aria-hidden="true">swipe <span className="swipe-arrow">→</span></p>
       <div className="explore-more reveal">
         <a className="explore-btn" href="#projects">Explore more projects <span className="explore-arrow">→</span></a>
       </div>
@@ -770,6 +771,7 @@ function LifeStrip() {
           </div>
         ))}
       </div>
+      <p className="swipe-hint" aria-hidden="true">swipe <span className="swipe-arrow">→</span></p>
     </section>
   );
 }
