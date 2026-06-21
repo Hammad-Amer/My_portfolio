@@ -98,7 +98,7 @@ const DATA = {
     { num: "23", label: "Age" },
     { num: "1", label: "Years of experience" },
     { num: "20", label: "Projects worked on" },
-    { num: "2", label: "Dean's List honors" },
+    { num: "3", label: "Dean's List honors" },
   ],
   education: [
     {
@@ -137,13 +137,13 @@ const DATA = {
       github: "https://github.com/Hammad-Amer/TORCS-Simulator",
     },
     {
-      title: "AWS Microservices Deployment",
-      desc: "End-to-end DevOps pipeline deploying a two-service app to a Kubernetes cluster on AWS EC2 — provisioned with Terraform, configured via Ansible, delivered with ArgoCD.",
-      mock: "mock-4", label: "DEVOPS · CLOUD",
-      url: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
-      image: "/images/projects/aws_microservices.png",
-      tech: ["AWS", "Kubernetes", "Docker", "Terraform"],
-      github: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
+      title: "DevSecOps Netflix Pipeline",
+      desc: "End-to-end DevSecOps pipeline that builds, security-scans and deploys a containerised Netflix-style app to Amazon EKS — Jenkins CI/CD gated by SonarQube, Trivy and OWASP, GitOps delivery with ArgoCD, and Prometheus/Grafana observability.",
+      mock: "mock-4", label: "DEVSECOPS · CLOUD",
+      url: "https://github.com/Hammad-Amer/devsecops-netflix-pipeline",
+      image: "/images/projects/netflix_aws.png",
+      tech: ["Jenkins", "Kubernetes", "ArgoCD", "AWS"],
+      github: "https://github.com/Hammad-Amer/devsecops-netflix-pipeline",
     },
     {
       title: "ConnectMe",
@@ -155,13 +155,13 @@ const DATA = {
       github: "https://github.com/Hammad-Amer/ConnectMe",
     },
     {
-      title: "SecureChat",
-      desc: "End-to-end encrypted client/server messaging built from raw cryptographic primitives (no TLS) — Diffie-Hellman key exchange, certificates and replay protection.",
-      mock: "mock-6", label: "SECURITY",
-      url: "https://github.com/Hammad-Amer/securechat-skeleton",
-      image: "/images/projects/securechat.png",
-      tech: ["Python", "Cryptography", "MySQL"],
-      github: "https://github.com/Hammad-Amer/securechat-skeleton",
+      title: "End-to-End MLOps Pipeline",
+      desc: "Self-healing MLOps platform that auto-retrains on data drift or accuracy drops, serves predictions through a FastAPI service on EC2, and ships full Prometheus/Grafana monitoring with Slack alerting — all driven by a GitHub Actions CI/CD pipeline.",
+      mock: "mock-6", label: "MLOPS · ML",
+      url: "https://github.com/Hammad-Amer/mlops-end-to-end",
+      image: "/images/projects/end-to-end-mlops.png",
+      tech: ["Python", "FastAPI", "Docker", "AWS"],
+      github: "https://github.com/Hammad-Amer/mlops-end-to-end",
     },
     {
       title: "Marketplace",
@@ -189,6 +189,24 @@ const DATA = {
       image: "",
       tech: ["C++", "Compiler Design"],
       github: "https://github.com/Hammad-Amer/FortPiler",
+    },
+    {
+      title: "AWS Microservices Deployment",
+      desc: "End-to-end DevOps pipeline deploying a two-service app to a Kubernetes cluster on AWS EC2 — provisioned with Terraform, configured via Ansible, delivered with ArgoCD.",
+      mock: "mock-4", label: "DEVOPS · CLOUD",
+      url: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
+      image: "/images/projects/aws_microservices.png",
+      tech: ["AWS", "Kubernetes", "Docker", "Terraform"],
+      github: "https://github.com/Hammad-Amer/Aws-Microservices-Deployment",
+    },
+    {
+      title: "SecureChat",
+      desc: "End-to-end encrypted client/server messaging built from raw cryptographic primitives (no TLS) — Diffie-Hellman key exchange, certificates and replay protection.",
+      mock: "mock-5", label: "SECURITY",
+      url: "https://github.com/Hammad-Amer/securechat-skeleton",
+      image: "/images/projects/securechat.png",
+      tech: ["Python", "Cryptography", "MySQL"],
+      github: "https://github.com/Hammad-Amer/securechat-skeleton",
     },
   ],
   experience: [
@@ -902,6 +920,7 @@ function AllProjects() {
             return (
               <a className="arch-card reveal" key={p.title} href={href} target="_blank" rel="noopener noreferrer">
                 <div className={"arch-thumb " + p.mock}>
+                  {p.image ? <img className="arch-img" src={p.image} alt="" loading="lazy" /> : null}
                   <span className="arch-idx">{String(n).padStart(2, "0")}</span>
                   <span className="arch-label">{p.label}</span>
                 </div>
