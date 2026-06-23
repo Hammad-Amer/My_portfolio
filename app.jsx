@@ -340,7 +340,7 @@ function Nav({ mode, setMode }) {
       <nav className="nav-links" aria-label="primary">
         <a className={"nav-link" + (mode === "pro" ? " active" : "")} href="#top" onClick={(e)=>{e.preventDefault(); setMode("pro");}}>Professional</a>
         <a className={"nav-link" + (mode === "personal" ? " active" : "")} href="#top" onClick={(e)=>{e.preventDefault(); setMode("personal");}}>Personal</a>
-        <a className="nav-lang" href="/resume/Hammad-Amer-Resume.pdf" target="_blank" rel="noopener noreferrer"><Icon name="external" size={13}/> Resume</a>
+        <a className="nav-lang" href="/resume/Hammad-Amer-Resume-Overall.pdf" target="_blank" rel="noopener noreferrer"><Icon name="external" size={13}/> Resume</a>
       </nav>
     </header>
   );
