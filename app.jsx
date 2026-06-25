@@ -90,9 +90,9 @@ function BgOrb() {
 /* ---------- Placeholder content ---------- */
 const DATA = {
   name: { first: "Hammad", last: "Amer" },
-  role: "AI & Full-Stack Engineer",
+  role: "AI, Full-Stack & Android Engineer",
   location: "Pakistan",
-  lede: "Software Engineer at the intersection of AI and Full-Stack Development.",
+  lede: "Software Engineer at the intersection of AI, Full-Stack and Android Development.",
   email: "hammadamer386@gmail.com",
   stats: [
     { num: "23", label: "Age" },
@@ -494,6 +494,10 @@ const TECH_STACK = [
     { name: "C++", slug: "cpp", brand: "#6E9FD2" },
     { name: "Java", slug: "java", brand: "#F89820" },
     { name: "MongoDB", slug: "mongodb", brand: "#4DB33D" },
+  ]},
+  { group: "Mobile", items: [
+    { name: "Android", slug: "android", brand: "#3DDC84" },
+    { name: "Kotlin", slug: "kotlin", brand: "#7F52FF" },
   ]},
   { group: "Cloud & Infra", items: [
     { name: "AWS", slug: "aws", brand: "#FF9900" },
